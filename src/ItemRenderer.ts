@@ -11,6 +11,7 @@ import { getDataAttributes, getKeys } from "./utils";
 export interface ItemRendererOptions {
   attributePrefix?: string;
   useTransform?: boolean;
+  remRootValueGetter?: () => number;
   horizontal?: boolean;
   percentage?: Array<"position" | "size"> | boolean;
   isEqualSize?: boolean;
@@ -32,6 +33,7 @@ export class ItemRenderer {
     this.options = {
       attributePrefix: DEFAULT_GRID_OPTIONS.attributePrefix,
       useTransform: DEFAULT_GRID_OPTIONS.useTransform,
+      remRootValueGetter: DEFAULT_GRID_OPTIONS.remRootValueGetter,
       horizontal: DEFAULT_GRID_OPTIONS.horizontal,
       percentage: DEFAULT_GRID_OPTIONS.percentage,
       isEqualSize: DEFAULT_GRID_OPTIONS.isEqualSize,
@@ -182,6 +184,7 @@ export class ItemRenderer {
     const {
       horizontal,
       useTransform,
+      remRootValueGetter,
     } = this.options;
     const posPercentage = this.posPercetage;
     const sizePercentage = this.sizePercetage;
@@ -200,8 +203,9 @@ export class ItemRenderer {
         + `translate(${cssRect.left || 0}px, ${cssRect.top || 0}px);`
       );
     }
+    const remRootValue = remRootValueGetter();
     cssTexts.push(...keys.map((name) => {
-      const value = cssRect[name]!;
+      const value = remRootValue ? cssRect[name]! / remRootValue : cssRect[name]!;
 
       if (
         (name === sizeName && sizePercentage) ||
@@ -209,7 +213,7 @@ export class ItemRenderer {
       ) {
         return `${name}: ${(value / inlineSize) * 100}%;`;
       }
-      return `${name}: ${value}px;`;
+      return `${name}: ${value}${remRootValue ? 'rem' : 'px'};`;
     }));
 
     element.style.cssText += cssTexts.join("");

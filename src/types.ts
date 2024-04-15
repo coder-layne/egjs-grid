@@ -82,6 +82,11 @@ export interface GridOptions {
    */
   useTransform?: boolean;
   /**
+   * The root element font size, if present, the left and top properties will use unit REM instead of px.
+   * @default 0
+   */
+  remRootValueGetter?: () => number;
+  /**
    * Whether to automatically render through property change.
    * <ko>property의 변화를 통해 자동으로 render를 할지 여부.</ko>
    * @default true

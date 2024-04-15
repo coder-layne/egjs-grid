@@ -8,6 +8,7 @@ import { GridOptions } from "./types";
 export const DEFAULT_GRID_OPTIONS: Required<GridOptions> = {
   horizontal: false,
   useTransform: false,
+  remRootValueGetter: () => 0,
   percentage: false,
   isEqualSize: false,
   isConstantSize: false,
